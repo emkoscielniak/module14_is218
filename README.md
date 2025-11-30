@@ -1,16 +1,17 @@
-# FastAPI User Authentication System
+# FastAPI Calculator with User Management & CRUD Operations
 
-A secure FastAPI application with user authentication, password hashing, and comprehensive testing. Built with SQLAlchemy ORM, Pydantic validation, and deployed via Docker Hub.
+A comprehensive FastAPI application featuring user authentication, calculation CRUD operations, and secure password management. Built with SQLAlchemy ORM, Pydantic validation, and deployed via Docker Hub with complete CI/CD pipeline.
 
 ## 🎯 Features
 
-- **Secure User Model**: SQLAlchemy-based user model with password hashing using bcrypt
-- **Pydantic Validation**: Strong input validation with custom password requirements
-- **Authentication**: JWT-based authentication with OAuth2 password bearer tokens
-- **API Endpoints**: RESTful endpoints for user registration, login, and profile access
-- **Comprehensive Testing**: Unit and integration tests with >70% code coverage
-- **CI/CD Pipeline**: Automated testing, security scanning, and Docker deployment
-- **Docker Support**: Containerized application ready for production deployment
+- **User Management**: Complete user registration and login system with JWT authentication
+- **Calculation CRUD**: Full BREAD operations (Browse, Read, Edit, Add, Delete) for calculations
+- **Secure Authentication**: JWT-based authentication with bcrypt password hashing
+- **Input Validation**: Comprehensive Pydantic validation with custom password requirements
+- **Database Integration**: SQLAlchemy ORM with PostgreSQL support
+- **Comprehensive Testing**: Unit and integration tests with pytest
+- **CI/CD Pipeline**: Automated testing, security scanning, and Docker Hub deployment
+- **OpenAPI Documentation**: Interactive API documentation with Swagger UI
 
 ## 🚀 Quick Start
 
@@ -18,7 +19,7 @@ A secure FastAPI application with user authentication, password hashing, and com
 
 ```bash
 # Pull and run the latest image from Docker Hub
-docker run -p 8000:8000 emkoscielniak/module10_is601:latest
+docker run -p 8000:8000 emkoscielniak/module12_is218:latest
 ```
 
 ### Local Development
@@ -26,7 +27,7 @@ docker run -p 8000:8000 emkoscielniak/module10_is601:latest
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd module10_is601
+cd module12_is218
 
 # Set up virtual environment
 python -m venv venv
@@ -46,43 +47,83 @@ The application will be available at `http://localhost:8000`
 
 ## 📋 API Endpoints
 
+### User Management
+- `POST /users/register` - Register a new user with UserCreate schema
+- `POST /users/login` - Login with username/password, returns JWT token
+- `GET /users/me` - Get current authenticated user information
+
+### Calculation CRUD (BREAD)
+- `GET /calculations` - Browse all calculations with pagination (skip, limit)
+- `GET /calculations/{id}` - Read a specific calculation by ID
+- `POST /calculations` - Add a new calculation using CalculationCreate schema
+- `PUT /calculations/{id}` - Edit/update an existing calculation
+- `DELETE /calculations/{id}` - Delete a calculation by ID
+
+### Legacy Endpoints
 - `GET /` - Homepage with calculator interface
-- `POST /register` - Register a new user
-- `POST /login` - Login with form data (OAuth2 compatible)
-- `POST /login/json` - Login with JSON payload
-- `GET /users/me` - Get current user info (requires authentication)
+- `POST /register` - Legacy user registration (redirects to /users/register)
+- `POST /login` - Legacy OAuth2 form login
+- `POST /login/json` - JSON login endpoint
 - `GET /health` - Health check endpoint
 - Calculator endpoints: `/add`, `/subtract`, `/multiply`, `/divide`
 
 ## 🧪 Running Tests Locally
 
 ### Prerequisites
-- PostgreSQL database running
+- PostgreSQL database running locally
 - Virtual environment activated with dependencies installed
 
 ### Test Commands
 
 ```bash
-# Run all tests
-pytest
-
-# Run only unit tests
-pytest tests/unit/
-
-# Run only integration tests  
-pytest tests/integration/
-
-# Run tests with coverage report
+# Run all tests with coverage
 pytest --cov=app --cov-report=html
 
-# Run tests preserving database for debugging
-pytest --preserve-db
+# Run only unit tests
+pytest tests/unit/ -v
+
+# Run only integration tests  
+pytest tests/integration/ -v
+
+# Run specific test file
+pytest tests/integration/test_user_registration_login.py -v
+pytest tests/integration/test_calculation_endpoints.py -v
+
+# Run tests with detailed output
+pytest tests/ -v --tb=short
 ```
 
 ### Test Categories
 
-- **Unit Tests**: Test individual functions (password hashing, schema validation)
-- **Integration Tests**: Test API endpoints and database interactions
+- **Unit Tests**: Test individual components (password hashing, calculation factory, schema validation)
+- **Integration Tests**: Test complete API workflows with database integration
+  - User registration and login flows
+  - Calculation CRUD operations
+  - Input validation and error handling
+  - Database persistence and data integrity
+
+## 🔍 Manual Testing via OpenAPI
+
+Access the interactive API documentation at:
+- **Swagger UI**: http://localhost:8000/docs  
+- **ReDoc**: http://localhost:8000/redoc
+
+### Testing User Endpoints
+1. **Register a User**: Use `/users/register` with valid user data
+2. **Login**: Use `/users/login` to get an authentication token  
+3. **Access Protected Routes**: Use the "Authorize" button in Swagger UI with your token
+
+### Testing Calculation Endpoints  
+1. **Create Calculations**: Use `/calculations` POST with different operation types
+2. **Browse Calculations**: Use `/calculations` GET with pagination parameters
+3. **Update Calculations**: Use `/calculations/{id}` PUT to modify existing calculations
+4. **Validate Input**: Test invalid data (division by zero, invalid types) to verify error handling
+
+## 🐳 Docker Hub Repository
+
+**Docker Hub Link**: [https://hub.docker.com/r/emkoscielniak/module12_is218](https://hub.docker.com/r/emkoscielniak/module12_is218)
+
+The Docker image is automatically built and pushed via GitHub Actions on every successful test run on the main branch.
 - **E2E Tests**: End-to-end browser testing with Playwright
 
 ## 🐳 Docker Hub Repository
