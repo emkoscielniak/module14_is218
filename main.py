@@ -370,7 +370,7 @@ async def health_check():
     """
     Health check endpoint for monitoring and Docker health checks.
     """
-    return {"status": "healthy", "timestamp": "2025-11-29"}
+    return {"status": "healthy", "timestamp": "2025-11-30"}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)
