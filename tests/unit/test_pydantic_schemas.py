@@ -103,7 +103,7 @@ class TestPasswordMixin:
 
     def test_password_too_long(self):
         """Test PasswordMixin with password too long."""
-        data = {"password": "A" + "a" * 125 + "1"}  # 129 characters
+        data = {"password": "A" + "a" * 127 + "1"}  # 129 characters (A + 127 a's + 1 = 129)
         with pytest.raises(ValidationError):
             PasswordMixin(**data)
 

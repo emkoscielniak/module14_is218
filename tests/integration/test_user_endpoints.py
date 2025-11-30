@@ -72,7 +72,7 @@ class TestUserRegistration:
         response2 = client.post("/register", json=user_data2)
         
         assert response2.status_code == 400
-        assert "Username or email already exists" in response2.json()["detail"]
+        assert "Username or email already exists" in response2.json()["error"]
 
     def test_register_user_duplicate_username(self, client, db_session):
         """Test registration with duplicate username."""
@@ -94,7 +94,7 @@ class TestUserRegistration:
         response2 = client.post("/register", json=user_data2)
         
         assert response2.status_code == 400
-        assert "Username or email already exists" in response2.json()["detail"]
+        assert "Username or email already exists" in response2.json()["error"]
 
     def test_register_user_invalid_email(self, client, db_session):
         """Test registration with invalid email format."""
@@ -231,7 +231,7 @@ class TestUserAuthentication:
         response = client.post("/login", data=login_data)
         
         assert response.status_code == 401
-        assert "Incorrect username or password" in response.json()["detail"]
+        assert "Incorrect username or password" in response.json()["error"]
 
     def test_login_nonexistent_user(self, client, db_session):
         """Test login with non-existent user."""
@@ -243,7 +243,7 @@ class TestUserAuthentication:
         response = client.post("/login", data=login_data)
         
         assert response.status_code == 401
-        assert "Incorrect username or password" in response.json()["detail"]
+        assert "Incorrect username or password" in response.json()["error"]
 
 
 class TestProtectedEndpoints:
