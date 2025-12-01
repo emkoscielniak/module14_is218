@@ -41,15 +41,13 @@ jobs:
         env:
           DATABASE_URL: postgresql://user:password@localhost:5432/mytestdb
         run: |
-          python -m venv venv
-          source venv/bin/activate
           pip install --upgrade pip
           # Install core dependencies first
           pip install fastapi uvicorn sqlalchemy pydantic python-jose passlib bcrypt
           pip install pytest pytest-cov requests python-dotenv pydantic-settings
-          pip install jinja2 python-multipart email-validator faker
-          # Try to install remaining requirements, but don't fail if some packages have issues
-          pip install -r requirements.txt || echo "Some packages failed to install, continuing..."
+          pip install jinja2 python-multipart email-validator faker psycopg2-binary
+          # Install remaining requirements
+          pip install -r requirements.txt
           # Install playwright browsers
           playwright install chromium || echo "Playwright browser install failed, continuing..."
       
@@ -57,8 +55,6 @@ jobs:
         env:
           DATABASE_URL: postgresql://user:password@localhost:5432/mytestdb
         run: |
-          source venv/bin/activate
-          
           # Run validation script
           python ci_validation.py
           
@@ -66,8 +62,6 @@ jobs:
         env:
           DATABASE_URL: postgresql://user:password@localhost:5432/mytestdb
         run: |
-          source venv/bin/activate
-          
           # Create test results directory
           mkdir -p test-results
           
