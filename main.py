@@ -254,13 +254,16 @@ async def read_users_me(
 async def browse_calculations(
     skip: int = 0,
     limit: int = 100,
+    current_user: User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
     """
-    Browse all calculations with pagination.
+    Browse all calculations belonging to the logged-in user with pagination.
     """
     try:
-        calculations = db.query(Calculation).offset(skip).limit(limit).all()
+        calculations = db.query(Calculation).filter(
+            Calculation.user_id == current_user.id
+        ).offset(skip).limit(limit).all()
         return [CalculationRead.model_validate(calc) for calc in calculations]
     except Exception as e:
         logger.error(f"Browse calculations error: {str(e)}")
@@ -269,13 +272,17 @@ async def browse_calculations(
 @app.get("/calculations/{id}", response_model=CalculationRead)
 async def read_calculation(
     id: int,
+    current_user: User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
     """
-    Read a specific calculation by ID.
+    Read a specific calculation by ID (user-specific).
     """
     try:
-        calculation = db.query(Calculation).filter(Calculation.id == id).first()
+        calculation = db.query(Calculation).filter(
+            Calculation.id == id,
+            Calculation.user_id == current_user.id
+        ).first()
         if not calculation:
             raise HTTPException(status_code=404, detail="Calculation not found")
         return CalculationRead.model_validate(calculation)
@@ -288,17 +295,19 @@ async def read_calculation(
 @app.post("/calculations", response_model=CalculationRead, status_code=status.HTTP_201_CREATED)
 async def add_calculation(
     calculation_data: CalculationCreate,
+    current_user: User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
     """
-    Add a new calculation using CalculationCreate schema.
+    Add a new calculation for the logged-in user using CalculationCreate schema.
     """
     try:
         # Create the calculation instance
         calculation = Calculation(
             a=calculation_data.a,
             b=calculation_data.b,
-            type=calculation_data.type
+            type=calculation_data.type,
+            user_id=current_user.id
         )
         
         # Compute the result
@@ -322,13 +331,17 @@ async def add_calculation(
 async def edit_calculation(
     id: int,
     calculation_update: CalculationUpdate,
+    current_user: User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
     """
-    Edit/update an existing calculation.
+    Edit/update an existing calculation (user-specific).
     """
     try:
-        calculation = db.query(Calculation).filter(Calculation.id == id).first()
+        calculation = db.query(Calculation).filter(
+            Calculation.id == id,
+            Calculation.user_id == current_user.id
+        ).first()
         if not calculation:
             raise HTTPException(status_code=404, detail="Calculation not found")
         
@@ -355,16 +368,61 @@ async def edit_calculation(
         db.rollback()
         raise HTTPException(status_code=500, detail="Internal server error")
 
-@app.delete("/calculations/{id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_calculation(
+@app.patch("/calculations/{id}", response_model=CalculationRead)
+async def patch_calculation(
     id: int,
+    calculation_update: CalculationUpdate,
+    current_user: User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
     """
-    Delete a calculation by ID.
+    Partially update an existing calculation (user-specific).
     """
     try:
-        calculation = db.query(Calculation).filter(Calculation.id == id).first()
+        calculation = db.query(Calculation).filter(
+            Calculation.id == id,
+            Calculation.user_id == current_user.id
+        ).first()
+        if not calculation:
+            raise HTTPException(status_code=404, detail="Calculation not found")
+        
+        # Update fields that are provided
+        update_data = calculation_update.model_dump(exclude_unset=True)
+        for field, value in update_data.items():
+            setattr(calculation, field, value)
+        
+        # Recalculate result if a, b, or type was updated
+        if any(key in update_data for key in ['a', 'b', 'type']):
+            calculation.result = calculation.compute()
+        
+        db.commit()
+        db.refresh(calculation)
+        
+        return CalculationRead.model_validate(calculation)
+    except HTTPException:
+        raise
+    except ValueError as e:
+        logger.error(f"Patch calculation error: {str(e)}")
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Unexpected patch calculation error: {str(e)}")
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+@app.delete("/calculations/{id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_calculation(
+    id: int,
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Delete a calculation by ID (user-specific).
+    """
+    try:
+        calculation = db.query(Calculation).filter(
+            Calculation.id == id,
+            Calculation.user_id == current_user.id
+        ).first()
         if not calculation:
             raise HTTPException(status_code=404, detail="Calculation not found")
         
