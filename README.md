@@ -1,17 +1,21 @@
-# FastAPI Calculator with JWT Authentication & Frontend
+# FastAPI Calculator with JWT Authentication, BREAD Operations & Frontend
 
-A comprehensive FastAPI application featuring JWT-based user authentication, front-end registration and login pages, and calculator functionality. Built with SQLAlchemy ORM, Pydantic validation, client-side JavaScript validation, and deployed via Docker Hub with complete CI/CD pipeline including Playwright E2E testing.
+A comprehensive FastAPI application featuring JWT-based user authentication, complete BREAD (Browse, Read, Edit, Add, Delete) operations for calculations, and an interactive web interface. Built with SQLAlchemy ORM, Pydantic validation, client-side JavaScript validation, and deployed via Docker Hub with complete CI/CD pipeline including Playwright E2E testing.
 
 ## 🎯 Features
 
 - **JWT Authentication**: Secure user registration and login with JWT tokens
-- **Frontend Pages**: Complete HTML pages for registration and login with client-side validation
+- **BREAD Operations**: Complete Create, Read, Update, Delete operations for user calculations
+- **Interactive Frontend**: Full-featured web interface for managing calculations
+- **User-Specific Data**: All calculations are user-specific and properly isolated
+- **Frontend Pages**: Complete HTML pages for registration, login, and calculation management
 - **Password Security**: Bcrypt hashing with complex password requirements
 - **Client-side Validation**: Email format validation, password strength checks, and form validation
 - **Token Management**: JWT token storage in localStorage and automatic authentication
-- **Calculation Operations**: Basic arithmetic operations (add, subtract, multiply, divide)
+- **Basic Calculator**: Real-time arithmetic operations (add, subtract, multiply, divide)
+- **Calculation Management**: Create, view, edit, and delete saved calculations
 - **Database Integration**: SQLAlchemy ORM with PostgreSQL support
-- **E2E Testing**: Comprehensive Playwright tests for authentication flows
+- **E2E Testing**: Comprehensive Playwright tests for all BREAD operations and authentication flows
 - **CI/CD Pipeline**: Automated testing, security scanning, and Docker Hub deployment
 - **OpenAPI Documentation**: Interactive API documentation with Swagger UI
 
@@ -67,12 +71,21 @@ The application will be available at `http://localhost:8000`
   - Error handling for invalid credentials (401 responses)
   - Automatic redirect to calculator after login
 
-### Calculator Page (`/`)
+### Calculator & Calculation Manager (`/`)
 - **URL**: `http://localhost:8000/`
 - **Features**:
-  - Basic arithmetic operations
-  - Real-time calculation results
-  - Error handling (e.g., division by zero)
+  - **User Authentication**: Login/Register forms with client-side validation
+  - **Basic Calculator**: Real-time arithmetic operations with error handling
+  - **Calculation Management**: Complete BREAD operations interface
+    - **Browse**: View all your saved calculations with pagination
+    - **Read**: Search for specific calculations by ID
+    - **Edit**: Modify existing calculations with live result updates
+    - **Add**: Create new calculations and save them to your account
+    - **Delete**: Remove calculations with confirmation prompts
+  - **User-Specific Data**: All calculations are private to the authenticated user
+  - **Responsive Design**: Mobile-friendly interface with grid layout
+  - **Real-time Updates**: Automatic calculation of results when editing
+  - **Error Handling**: Comprehensive validation and error messaging
 
 ## 📋 API Endpoints
 
@@ -81,12 +94,15 @@ The application will be available at `http://localhost:8000`
 - `POST /users/login` - Login with username/password, returns JWT token
 - `GET /users/me` - Get current authenticated user information
 
-### Calculation CRUD (BREAD)
-- `GET /calculations` - Browse all calculations with pagination (skip, limit)
-- `GET /calculations/{id}` - Read a specific calculation by ID
+### Calculation BREAD Operations (🔐 Authentication Required)
+- `GET /calculations` - Browse all user's calculations with pagination (skip, limit)
+- `GET /calculations/{id}` - Read a specific calculation by ID (user-specific)
 - `POST /calculations` - Add a new calculation using CalculationCreate schema
-- `PUT /calculations/{id}` - Edit/update an existing calculation
-- `DELETE /calculations/{id}` - Delete a calculation by ID
+- `PUT /calculations/{id}` - Edit/update an existing calculation (full update)
+- `PATCH /calculations/{id}` - Partially update an existing calculation
+- `DELETE /calculations/{id}` - Delete a calculation by ID (user-specific)
+
+**Note**: All calculation endpoints require JWT authentication via `Authorization: Bearer <token>` header. Users can only access their own calculations.
 
 ### Legacy Endpoints
 - `GET /` - Homepage with calculator interface
@@ -139,15 +155,40 @@ pytest tests/integration/test_user_auth.py -v
 ### Running Playwright E2E Tests
 
 ```bash
-# Run all E2E tests
+# Run all E2E tests (includes BREAD operations)
 pytest tests/e2e/ --tb=short -v
 
 # Run with headed browser (visible)
 pytest tests/e2e/ --headed -v
 
-# Run specific E2E test
-pytest tests/e2e/test_e2e.py::test_register_with_valid_data -v
+# Run specific E2E test categories
+pytest tests/e2e/test_e2e.py::test_authentication_flow -v
+pytest tests/e2e/test_e2e.py::test_add_calculation_positive -v
+pytest tests/e2e/test_e2e.py::test_edit_calculation_positive -v
+pytest tests/e2e/test_e2e.py::test_delete_calculation_positive -v
+
+# Run negative test scenarios
+pytest tests/e2e/test_e2e.py::test_unauthorized_access -v
+pytest tests/e2e/test_e2e.py::test_divide_by_zero_calculation -v
 ```
+
+### Testing BREAD Operations
+
+The E2E tests cover comprehensive scenarios for all BREAD operations:
+
+**Positive Scenarios**:
+- User authentication and authorization flow
+- Creating calculations with various operations (Add, Sub, Multiply, Divide)
+- Browsing and retrieving user-specific calculations
+- Editing existing calculations with proper result recalculation
+- Deleting calculations with confirmation
+
+**Negative Scenarios**:
+- Unauthorized access attempts (401 errors)
+- Invalid input validation (empty fields, invalid operations)
+- Division by zero error handling
+- Accessing non-existent calculations (404 errors)
+- Cross-user data access prevention
 
 ### E2E Test Coverage
 
