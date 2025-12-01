@@ -117,6 +117,66 @@ def managed_db_session():
         session.close()
 
 # ======================================================================================
+# Authentication Helpers
+# ======================================================================================
+def create_test_user(session: 'Session', user_data: Dict[str, str] = None) -> 'User':
+    """
+    Create a test user in the database.
+    
+    Args:
+        session: Database session
+        user_data: Optional user data dictionary. If None, generates fake data.
+        
+    Returns:
+        Created User instance
+    """
+    if not HAS_SQLALCHEMY:
+        pytest.skip("SQLAlchemy not available")
+    
+    if user_data is None:
+        user_data = create_fake_user()
+    
+    user = User.register(session, user_data)
+    session.commit()
+    session.refresh(user)
+    return user
+
+def get_auth_headers(access_token: str) -> Dict[str, str]:
+    """
+    Generate authentication headers with Bearer token.
+    
+    Args:
+        access_token: JWT access token
+        
+    Returns:
+        Headers dictionary with Authorization header
+    """
+    return {"Authorization": f"Bearer {access_token}"}
+
+def authenticate_test_user(client, username: str, password: str) -> Dict[str, str]:
+    """
+    Authenticate a test user and return auth headers.
+    
+    Args:
+        client: TestClient instance
+        username: Username for authentication
+        password: Password for authentication
+        
+    Returns:
+        Dictionary containing auth headers
+        
+    Raises:
+        AssertionError: If authentication fails
+    """
+    response = client.post("/users/login", json={
+        "username": username,
+        "password": password
+    })
+    assert response.status_code == 200
+    token_data = response.json()
+    return get_auth_headers(token_data["access_token"])
+
+# ======================================================================================
 # Server Startup / Healthcheck
 # ======================================================================================
 def wait_for_server(url: str, timeout: int = 30) -> bool:
