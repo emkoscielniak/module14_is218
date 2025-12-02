@@ -7,7 +7,7 @@ from sqlalchemy import Column, String, DateTime, Boolean
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.exc import IntegrityError
-from passlib.context import CryptContext
+import hashlib
 from jose import JWTError, jwt
 from pydantic import ValidationError
 
@@ -15,7 +15,15 @@ from app.database import Base
 from app.schemas.base import UserCreate
 from app.schemas.user import UserResponse, Token
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto", bcrypt__rounds=4)
+# Use simple SHA256 hashing for demo purposes (not for production)
+def simple_hash(password: str) -> str:
+    """Simple password hashing using SHA256 + salt for demo purposes."""
+    salt = "demo_salt_2024"
+    return hashlib.sha256((password + salt).encode()).hexdigest()
+
+def verify_simple_hash(password: str, hashed: str) -> bool:
+    """Verify password against simple hash."""
+    return simple_hash(password) == hashed
 
 # Move to config
 SECRET_KEY = "your-secret-key"
@@ -45,15 +53,12 @@ class User(Base):
 
     @staticmethod
     def hash_password(password: str) -> str:
-        """Hash a password using bcrypt with byte limit handling."""
-        # Truncate password to 72 bytes to avoid bcrypt error
-        password_bytes = password.encode('utf-8')[:72]
-        password_truncated = password_bytes.decode('utf-8', errors='ignore')
-        return pwd_context.hash(password_truncated)
+        """Hash a password using simple SHA256 (demo purposes only)."""
+        return simple_hash(password)
 
     def verify_password(self, plain_password: str) -> bool:
         """Verify a plain password against the hashed password."""
-        return pwd_context.verify(plain_password, self.password_hash)
+        return verify_simple_hash(plain_password, self.password_hash)
 
     @staticmethod
     def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:

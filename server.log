@@ -25,3 +25,79 @@ ERROR:main:User registration error: password cannot be longer than 72 bytes, tru
 INFO:sqlalchemy.engine.Engine:ROLLBACK
 ERROR:main:HTTPException on /users/register: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
 INFO:     127.0.0.1:59106 - "POST /users/register HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:60313 - "GET / HTTP/1.1" 200 OK
+ERROR:main:ValidationError on /users/register: email: value is not a valid email address: An email address must have an @-sign.
+INFO:     127.0.0.1:60315 - "POST /users/register HTTP/1.1" 400 Bad Request
+2025-12-01 23:43:39,699 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+2025-12-01 23:43:39,700 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.first_name AS users_first_name, users.last_name AS users_last_name, users.email AS users_email, users.username AS users_username, users.password_hash AS users_password_hash, users.is_active AS users_is_active, users.is_verified AS users_is_verified, users.last_login AS users_last_login, users.created_at AS users_created_at, users.updated_at AS users_updated_at 
+FROM users 
+WHERE users.email = ? OR users.username = ?
+ LIMIT ? OFFSET ?
+INFO:sqlalchemy.engine.Engine:SELECT users.id AS users_id, users.first_name AS users_first_name, users.last_name AS users_last_name, users.email AS users_email, users.username AS users_username, users.password_hash AS users_password_hash, users.is_active AS users_is_active, users.is_verified AS users_is_verified, users.last_login AS users_last_login, users.created_at AS users_created_at, users.updated_at AS users_updated_at 
+FROM users 
+WHERE users.email = ? OR users.username = ?
+ LIMIT ? OFFSET ?
+2025-12-01 23:43:39,701 INFO sqlalchemy.engine.Engine [cached since 5606s ago] ('testuser13@example.com', 'testuser13', 1, 0)
+INFO:sqlalchemy.engine.Engine:[cached since 5606s ago] ('testuser13@example.com', 'testuser13', 1, 0)
+WARNING:passlib.handlers.bcrypt:(trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/Users/emisk/.pyenv/versions/3.12.6/lib/python3.12/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+ERROR:main:User registration error: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2025-12-01 23:43:39,713 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+ERROR:main:HTTPException on /users/register: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+INFO:     127.0.0.1:60322 - "POST /users/register HTTP/1.1" 400 Bad Request
+2025-12-01 23:43:46,853 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+2025-12-01 23:43:46,854 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.first_name AS users_first_name, users.last_name AS users_last_name, users.email AS users_email, users.username AS users_username, users.password_hash AS users_password_hash, users.is_active AS users_is_active, users.is_verified AS users_is_verified, users.last_login AS users_last_login, users.created_at AS users_created_at, users.updated_at AS users_updated_at 
+FROM users 
+WHERE users.email = ? OR users.username = ?
+ LIMIT ? OFFSET ?
+INFO:sqlalchemy.engine.Engine:SELECT users.id AS users_id, users.first_name AS users_first_name, users.last_name AS users_last_name, users.email AS users_email, users.username AS users_username, users.password_hash AS users_password_hash, users.is_active AS users_is_active, users.is_verified AS users_is_verified, users.last_login AS users_last_login, users.created_at AS users_created_at, users.updated_at AS users_updated_at 
+FROM users 
+WHERE users.email = ? OR users.username = ?
+ LIMIT ? OFFSET ?
+2025-12-01 23:43:46,854 INFO sqlalchemy.engine.Engine [cached since 5613s ago] ('testuser13@example.com', 'testuser13', 1, 0)
+INFO:sqlalchemy.engine.Engine:[cached since 5613s ago] ('testuser13@example.com', 'testuser13', 1, 0)
+WARNING:passlib.handlers.bcrypt:(trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/Users/emisk/.pyenv/versions/3.12.6/lib/python3.12/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+ERROR:main:User registration error: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2025-12-01 23:43:46,862 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+ERROR:main:HTTPException on /users/register: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+INFO:     127.0.0.1:60324 - "POST /users/register HTTP/1.1" 400 Bad Request
+2025-12-01 23:43:49,944 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+INFO:sqlalchemy.engine.Engine:BEGIN (implicit)
+2025-12-01 23:43:49,944 INFO sqlalchemy.engine.Engine SELECT users.id AS users_id, users.first_name AS users_first_name, users.last_name AS users_last_name, users.email AS users_email, users.username AS users_username, users.password_hash AS users_password_hash, users.is_active AS users_is_active, users.is_verified AS users_is_verified, users.last_login AS users_last_login, users.created_at AS users_created_at, users.updated_at AS users_updated_at 
+FROM users 
+WHERE users.email = ? OR users.username = ?
+ LIMIT ? OFFSET ?
+INFO:sqlalchemy.engine.Engine:SELECT users.id AS users_id, users.first_name AS users_first_name, users.last_name AS users_last_name, users.email AS users_email, users.username AS users_username, users.password_hash AS users_password_hash, users.is_active AS users_is_active, users.is_verified AS users_is_verified, users.last_login AS users_last_login, users.created_at AS users_created_at, users.updated_at AS users_updated_at 
+FROM users 
+WHERE users.email = ? OR users.username = ?
+ LIMIT ? OFFSET ?
+2025-12-01 23:43:49,944 INFO sqlalchemy.engine.Engine [cached since 5616s ago] ('testuser13@example.com', 'testuser13', 1, 0)
+INFO:sqlalchemy.engine.Engine:[cached since 5616s ago] ('testuser13@example.com', 'testuser13', 1, 0)
+WARNING:passlib.handlers.bcrypt:(trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/Users/emisk/.pyenv/versions/3.12.6/lib/python3.12/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+ERROR:main:User registration error: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+2025-12-01 23:43:49,955 INFO sqlalchemy.engine.Engine ROLLBACK
+INFO:sqlalchemy.engine.Engine:ROLLBACK
+ERROR:main:HTTPException on /users/register: password cannot be longer than 72 bytes, truncate manually if necessary (e.g. my_password[:72])
+INFO:     127.0.0.1:60324 - "POST /users/register HTTP/1.1" 400 Bad Request
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [48295]

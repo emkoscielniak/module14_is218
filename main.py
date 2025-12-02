@@ -148,7 +148,13 @@ async def register_user(
     Register a new user using UserCreate schema.
     """
     try:
-        user = User.register(db, user_data.model_dump())
+        # Truncate password to avoid bcrypt 72-byte limit
+        user_dict = user_data.model_dump()
+        if 'password' in user_dict:
+            password_bytes = user_dict['password'].encode('utf-8')[:72]
+            user_dict['password'] = password_bytes.decode('utf-8', errors='ignore')
+        
+        user = User.register(db, user_dict)
         db.commit()
         db.refresh(user)
         return UserRead.model_validate(user)
