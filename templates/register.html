@@ -7,10 +7,58 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 20px;
+            margin: 0;
+            padding: 0;
             background-color: #f5f5f5;
+        }
+        
+        .nav {
+            background-color: #333;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .nav .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-brand {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            background-color: #555;
+        }
+        
+        .nav-links a.active {
+            background-color: #007bff;
+        }
+        
+        .page-container {
+            max-width: 500px;
+            margin: 40px auto;
+            padding: 20px;
         }
         
         .container {
@@ -104,7 +152,20 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Navigation Bar -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">Calculator App</a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/calculations-page">Calculations</a>
+                <a href="#" onclick="logout(); return false;">Logout</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="page-container">
+        <div class="container">
         <h1>Register</h1>
         <form id="registerForm">
             <div class="form-group">
@@ -286,6 +347,12 @@
             successElements.forEach(el => {
                 el.style.display = 'none';
             });
+        }
+        
+        function logout() {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('user_data');
+            window.location.href = '/login';
         }
     </script>
 </body>

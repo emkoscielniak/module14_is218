@@ -9,14 +9,58 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             background-color: #f5f5f5;
             line-height: 1.6;
+        }
+        
+        .nav {
+            background-color: #333;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-brand {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            background-color: #555;
+        }
+        
+        .nav-links a.active {
+            background-color: #007bff;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            padding: 20px;
         }
         
         .section {
@@ -201,6 +245,18 @@
     </style>
 </head>
 <body>
+    <!-- Navigation Bar -->
+    <nav class="nav">
+        <div class="container">
+            <a href="/" class="nav-brand">Calculator App</a>
+            <div class="nav-links">
+                <a href="/" class="active">Home</a>
+                <a href="/calculations-page">Calculations</a>
+                <a href="#" onclick="logout(); return false;">Logout</a>
+            </div>
+        </div>
+    </nav>
+    
     <div class="container">
         <h1>Calculator & Calculation Manager</h1>
         

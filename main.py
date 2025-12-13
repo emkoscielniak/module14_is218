@@ -9,6 +9,7 @@ from fastapi.exceptions import RequestValidationError
 from sqlalchemy.orm import Session
 from app.operations import add, subtract, multiply, divide  # Ensure correct import path
 from app.database import get_db
+from app.database_init import init_db
 from app.models.user import User
 from app.models.calculation import Calculation
 from app.schemas.base import UserCreate, UserRead
@@ -27,6 +28,18 @@ app = FastAPI()
 
 # Setup templates directory
 templates = Jinja2Templates(directory="templates")
+
+# Initialize database tables on startup
+@app.on_event("startup")
+async def startup_event():
+    """Initialize the database tables when the application starts."""
+    logger.info("Initializing database tables...")
+    try:
+        init_db()
+        logger.info("Database tables initialized successfully!")
+    except Exception as e:
+        logger.error(f"Failed to initialize database: {e}")
+        raise
 
 # Pydantic model for request data
 class OperationRequest(BaseModel):
@@ -86,6 +99,13 @@ async def login_page(request: Request):
     Serve the login page.
     """
     return templates.TemplateResponse("login.html", {"request": request})
+
+@app.get("/calculations-page")
+async def calculations_page(request: Request):
+    """
+    Serve the calculations management page.
+    """
+    return templates.TemplateResponse("calculations.html", {"request": request})
 
 @app.post("/add", response_model=OperationResponse, responses={400: {"model": ErrorResponse}})
 async def add_route(operation: OperationRequest):

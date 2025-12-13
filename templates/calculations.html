@@ -6,31 +6,71 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 0;
+            padding: 0;
+            max-width: 100%;
+            background-color: #f5f5f5;
+        }
+        
+        .nav {
+            background-color: #333;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .nav .nav-container {
             max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-brand {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            background-color: #555;
+        }
+        
+        .nav-links a.active {
+            background-color: #007bff;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
         }
         
         h1, h2 {
             color: #333;
         }
         
-        .nav {
-            margin-bottom: 30px;
+        #authError {
+            color: red;
+            background-color: #fee;
             padding: 10px;
-            background-color: #f0f0f0;
             border-radius: 5px;
-        }
-        
-        .nav a {
-            margin-right: 15px;
-            text-decoration: none;
-            color: #0066cc;
-        }
-        
-        .nav a:hover {
-            text-decoration: underline;
+            margin-bottom: 20px;
         }
         
         .section {
@@ -143,18 +183,24 @@
     </style>
 </head>
 <body>
-    <div class="nav">
-        <a href="/">Home</a>
-        <a href="/login">Login</a>
-        <a href="/register">Register</a>
-        <a href="#" onclick="logout()">Logout</a>
-    </div>
+    <!-- Navigation Bar -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">Calculator App</a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/calculations-page" class="active">Calculations</a>
+                <a href="#" onclick="logout(); return false;">Logout</a>
+            </div>
+        </div>
+    </nav>
 
-    <h1>My Calculations</h1>
-    
-    <div id="authError" class="message error-message" style="display: none;">
-        Please login to access this page.
-    </div>
+    <div class="container">
+        <h1>My Calculations</h1>
+        
+        <div id="authError" class="message error-message" style="display: none;">
+            Please login to access this page.
+        </div>
 
     <!-- Add New Calculation Section -->
     <div class="section">
@@ -515,5 +561,6 @@
             }
         };
     </script>
+    </div> <!-- Close container -->
 </body>
 </html>
