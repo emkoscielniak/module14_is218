@@ -42,10 +42,29 @@ docker run -p 8000:8000 -e DATABASE_URL="postgresql://postgres:postgres@host.doc
 # Visit http://localhost:8000
 ```
 
-## Step 4: Push to GitHub to Trigger Deployment
+## Step 4: Create Docker Hub Repository
+
+**IMPORTANT: Do this BEFORE pushing to GitHub!**
+
+1. Go to https://hub.docker.com/repositories
+2. Click "Create Repository"
+3. Fill in:
+   - **Name**: `module14_is218`
+   - **Description**: "FastAPI Module 14 with JWT auth and BREAD operations"
+   - **Visibility**: Public (free) or Private (paid)
+4. Click "Create"
+
+Your repository will be at: https://hub.docker.com/r/emkoscielniak/module14_is218
+
+## Step 5: Push to GitHub to Trigger Deployment
 
 ```bash
-# Make sure all changes are committed
+# Make s6: Set Up Server (138.197.75.94)
+
+**⚠️ PREREQUISITES:**
+- ✅ GitHub Actions workflow completed successfully
+- ✅ Docker image visible at https://hub.docker.com/r/emkoscielniak/module14_is218
+- ✅ You see the `latest` tag in Docker Hub
 git add .
 git commit -m "Configure Module 14 deployment with Watchtower"
 git push origin main
@@ -58,6 +77,13 @@ This will trigger the CI/CD pipeline:
 4. ✅ Push to Docker Hub
 
 Watch the progress at: https://github.com/emkoscielniak/module14_is218/actions
+
+**⏳ WAIT FOR THIS TO COMPLETE (5-10 minutes) BEFORE PROCEEDING TO SERVER SETUP!**
+
+You'll know it's done when:
+- ✅ GitHub Actions workflow shows all green checkmarks
+- ✅ You can see the image at https://hub.docker.com/r/emkoscielniak/module14_is218/tags
+- ✅ You see tags: `latest` and a git SHA tag
 
 ## Step 5: Set Up Server (138.197.75.94)
 
@@ -145,7 +171,7 @@ You should see:
 ```bash
 # Test locally on the server
 curl http://localhost:8000
-curl http://localhost:8000/docs
+curl htt7://localhost:8000/docs
 
 # You should get responses!
 ```
@@ -193,7 +219,7 @@ Wait 5-10 minutes for DNS propagation.
 
 ### Test HTTPS
 
-```bash
+```bash8
 curl https://project14.emkoscielniak.com
 curl https://project14.emkoscielniak.com/docs
 ```
